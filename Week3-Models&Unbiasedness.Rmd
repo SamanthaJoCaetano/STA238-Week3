@@ -1,0 +1,109 @@
+---
+title: "STA238 Week 3 - Statistical Models"
+author: "Samantha-Jo Caetano"
+date: "January 25, 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Linear Regression
+
+Let's perform a linear regression analysis using the coffee ratings data that was introduced in week 1. 
+
+### Load in the coffee ratings data here:
+```{r coffee-load, include=FALSE}
+library(tidyverse)
+coffee_ratings <- read_csv("coffee_ratings.csv")
+```
+
+
+Let's start off by plotting some variables against each other to see what might make for a good linear relationship (we want something appropriate both practically and statistically).
+
+
+```{r scatterplots, echo=FALSE}
+
+
+```
+
+
+So our model is as follows: $$Y_i = \alpha + \beta x_i + U_i$$ or (some notation also use $$Y_i = \beta_0 + \beta_1 x_i + \epsilon_i$$). Later on we will learn about how to estimate these parameters, but for now let's let R do the work for us.
+
+```{r slope-intercept-est, echo=FALSE}
+
+
+
+```
+
+
+Now let's re-plot the original the original scatterplot but with the affiliated line.
+
+
+```{r scatterplots-with-line, echo=FALSE}
+
+
+
+
+```
+
+
+
+## Extra
+
+```{r Quadratic Estimation, echo=FALSE}
+
+
+
+
+```
+
+
+
+
+# Unbiasedness
+
+
+Let's revisit last week's example. Assume $$X_1, ..., X_n ~ Exp(\beta = 0.5)$$, where $$\beta$$ is the rate parameter. Thus, $$E(X) = 1/\beta = 2$$ and $$Var(X) = 1/\beta^2 = 4 $$. Now let's use a simulation to "show" that the sample variance is unbiased.
+
+```{r}
+set.seed(20210126)
+
+# Simulate 500 random samples of size 30 from a Exp(1/2)
+N <- 500
+n <- 30
+beta <- 0.5
+
+# Simulate the samples and calculate the estimators for each sample
+samples <- vector(mode = "list",length = N)
+
+VARs_from_Samples <- numeric(N) # Create an empty vector - one placeholder for each of the N samples.
+for (i in 1:N) {
+  samples[[i]] <- rexp(n, beta) 
+  VARs_from_Samples[i] <- var(samples[[i]])
+}
+
+tibble(VARs_from_Samples) %>%
+  ggplot(aes(x = VARs_from_Samples)) +
+  theme_classic() +
+  geom_histogram(colour = "black",fill = "transparent",bins = 10) +
+  coord_cartesian(ylim = c(0,250)) +
+  geom_vline(xintercept = 4,colour = "red",linetype = "dotdash")
+
+mean(VARs_from_Samples)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
